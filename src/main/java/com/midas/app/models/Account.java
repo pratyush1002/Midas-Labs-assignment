@@ -36,4 +36,8 @@ public class Account {
   @Column(name = "updated_at")
   @UpdateTimestamp
   private OffsetDateTime updatedAt;
+
+  enum providerType {stripe};
+
+  private String providerId ;
 }

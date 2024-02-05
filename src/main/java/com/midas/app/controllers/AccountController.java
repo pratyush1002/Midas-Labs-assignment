@@ -3,6 +3,7 @@ package com.midas.app.controllers;
 import com.midas.app.mappers.Mapper;
 import com.midas.app.models.Account;
 import com.midas.app.services.AccountService;
+import com.midas.app.workflows.CreateAccountWorkflow;
 import com.midas.generated.api.AccountsApi;
 import com.midas.generated.model.AccountDto;
 import com.midas.generated.model.CreateAccountDto;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Controller;
 public class AccountController implements AccountsApi {
   private final AccountService accountService;
   private final Logger logger = LoggerFactory.getLogger(AccountController.class);
+  private final CreateAccountWorkflow createAccountWorkflow;
 
   /**
    * POST /accounts : Create a new user account Creates a new user account with the given details
@@ -38,6 +40,10 @@ public class AccountController implements AccountsApi {
                 .lastName(createAccountDto.getLastName())
                 .email(createAccountDto.getEmail())
                 .build());
+
+
+    var accountCreated=createAccountWorkflow.createAccount(account);
+    accountCreated.setProviderId(accountCreated.getId());
 
     return new ResponseEntity<>(Mapper.toAccountDto(account), HttpStatus.CREATED);
   }
